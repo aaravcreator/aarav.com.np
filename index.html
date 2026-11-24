@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aarav Poudel — Robotics & Full-Stack Engineer</title>
+<!--<script src="/src/style.css"></script>-->
+<link rel="stylesheet" href="/src/style.css" >
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script>
+//   tailwind.config = {
+//     theme: {
+//       extend: {
+//         colors: {
+//           bg: '#06090f',
+//           surface: '#0d1520',
+//           surface2: '#131e2e',
+//           border: '#1e2d42',
+//         },
+//         fontFamily: {
+//           display: ['Poppins', 'sans-serif'],
+//           mono: ['Space Mono', 'monospace'],
+//         },
+//       }
+//     }
+//   }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background:#06090f; color:#dce8f0; font-family:'Syne',sans-serif; overflow-x:hidden; cursor:none; }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  /* Cursor */
+  #cur { position:fixed; width:10px; height:10px; background:#00d4ff; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:screen; transition:width .15s,height .15s,background .15s; }
+  #cur-ring { position:fixed; width:34px; height:34px; border:1px solid rgba(0,212,255,.45); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .1s ease,top .1s ease,width .25s,height .25s; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.2rem 2.5rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; transition:background .3s,border-color .3s; }
+  nav.scrolled { background:rgba(6,9,15,.9); backdrop-filter:blur(18px); border-color:#1e2d42; }
+
+  .btn-clip { clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); }
+
+  @keyframes pulse-g { 0%,100%{box-shadow:0 0 0 0 rgba(57,255,20,.5)} 50%{box-shadow:0 0 0 6px rgba(57,255,20,0)} }
+  .pulse-g { animation:pulse-g 2s infinite; }
+
+  @keyframes spin-cw  { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  @keyframes spin-ccw { from{transform:rotate(0)} to{transform:rotate(-360deg)} }
+  .spin-cw  { animation:spin-cw  22s linear infinite; }
+  .spin-ccw { animation:spin-ccw 16s linear infinite; }
+  .spin-s   { animation:spin-cw  10s linear infinite; }
+
+  @keyframes g1 { 0%,100%{clip-path:inset(0 0 95% 0);transform:translateX(-3px)} 33%{clip-path:inset(30% 0 50% 0);transform:translateX(3px)} 66%{clip-path:inset(70% 0 10% 0);transform:translateX(-2px)} }
+  @keyframes g2 { 0%,100%{clip-path:inset(80% 0 5% 0);transform:translateX(3px)} 33%{clip-path:inset(40% 0 40% 0);transform:translateX(-3px)} 66%{clip-path:inset(5% 0 80% 0);transform:translateX(2px)} }
+  .glitch { position:relative; display:inline-block; }
+  .glitch::before,.glitch::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; font-size:inherit; font-weight:inherit; letter-spacing:inherit; line-height:inherit; }
+  .glitch::before { color:#ff6b35; animation:g1 5s infinite; opacity:.5; }
+  .glitch::after  { color:#00d4ff; animation:g2 5s infinite; opacity:.5; }
+
+  @keyframes blink { 50%{opacity:0} }
+  .blink { animation:blink 1s step-end infinite; }
+
+  .fade-up { opacity:0; transform:translateY(26px); transition:opacity .65s ease,transform .65s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:#06090f} ::-webkit-scrollbar-thumb{background:#1e2d42} ::-webkit-scrollbar-thumb:hover{background:#00d4ff}
+
+  .skill-card { background:#0d1520; border:1px solid #1e2d42; padding:2rem; overflow:hidden; position:relative; transition:border-color .3s,transform .3s; }
+  .skill-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(0,212,255,.06),transparent 60%); opacity:0; transition:opacity .3s; }
+  .skill-card:hover { border-color:#00d4ff; transform:translateY(-4px); }
+  .skill-card:hover::before { opacity:1; }
+
+  .proj-card { background:#0d1520; border:1px solid #1e2d42; overflow:hidden; transition:border-color .3s; }
+  .proj-card:hover { border-color:#00d4ff; }
+  .proj-card img { filter:grayscale(40%) brightness(.78); transition:filter .4s; }
+  .proj-card:hover img { filter:grayscale(0%) brightness(.92); }
+
+  .gallery-item { overflow:hidden; }
+  .gallery-item img { transition:transform .4s,filter .4s; filter:grayscale(25%); }
+  .gallery-item:hover img { transform:scale(1.05); filter:grayscale(0%); }
+
+  .c-row { display:flex; align-items:center; justify-content:space-between; padding:1.4rem 2rem; border:1px solid #1e2d42; background:#0d1520; text-decoration:none; color:#dce8f0; transition:all .25s; margin-bottom:-1px; }
+  .c-row:hover { border-color:#00d4ff; background:#131e2e; padding-left:2.5rem; }
+  .c-arrow { color:#00d4ff; opacity:0; transform:translateX(-8px); transition:all .25s; }
+  .c-row:hover .c-arrow { opacity:1; transform:translateX(0); }
+
+  @media(max-width:768px) {
+    nav { padding:1rem 1.25rem; }
+    .hero-orbit { display:none !important; }
+  }
+</style>
+</head>
+<body class="grid-bg">
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <span class="font-mono text-xs tracking-widest text-[#00d4ff]">AP<span class="text-gray-600">_PORTFOLIO</span></span>
+
+  <div class="hidden sm:flex gap-8 font-mono text-[.68rem] tracking-widest">
+    <a href="#about"    class="text-gray-400 hover:text-[#00d4ff] transition-colors uppercase">About</a>
+    <a href="#skills"   class="text-gray-400 hover:text-[#00d4ff] transition-colors uppercase">Skills</a>
+    <a href="#projects" class="text-gray-400 hover:text-[#00d4ff] transition-colors uppercase">Projects</a>
+    <a href="#contact"  class="text-gray-400 hover:text-[#00d4ff] transition-colors uppercase">Contact</a>
+  </div>
+
+  <span class="font-mono text-[.65rem] text-gray-400 flex items-center gap-2">
+    <span class="w-2 h-2 rounded-full bg-[#39ff14] pulse-g inline-block"></span>
+    <span class="text-[#39ff14]">Available</span>
+  </span>
+</nav>
+
+<!-- HERO -->
+<section class="min-h-screen flex flex-col justify-center px-6 md:px-10 relative overflow-hidden pt-20" id="home">
+  <div class="max-w-6xl mx-auto w-full relative">
+
+    <div class="flex items-center gap-4 font-mono text-[.62rem] tracking-[.2em] uppercase text-[#00d4ff] mb-6 fade-up">
+      <span class="w-8 h-px bg-[#00d4ff]"></span>
+      01 — Robotics &amp; Full-Stack Engineer · Kathmandu, Nepal
+    </div>
+
+    <h1 class="font-display font-extrabold leading-[.9] tracking-tight text-[clamp(4rem,11vw,9rem)] mb-6 fade-up d1">
+      Aarav<br>
+      <span class="glitch" style="color:transparent;-webkit-text-stroke:1.5px #00d4ff;" data-text="Poudel">Poudel</span>
+    </h1>
+
+    <p class="font-mono text-[.8rem] text-gray-300 leading-relaxed max-w-lg mb-10 fade-up d2">
+      Building intelligent machines and full-stack systems — from circuit boards to cloud deployments.
+      <span class="text-[#00d4ff]">Django</span> backends.
+      <span class="text-[#ff6b35]">React</span> frontends.
+      Autonomous robots.
+    </p>
+
+    <div class="flex flex-wrap gap-4 mb-16 fade-up d3">
+      <a href="#projects" class="btn-clip bg-[#00d4ff] text-[#06090f] font-mono font-bold text-[.68rem] tracking-widest uppercase px-7 py-3.5 hover:bg-[#ff6b35] transition-colors flex items-center gap-2">
+        View Projects →
+      </a>
+      <a href="https://blog.aarav.com.np" target="_blank" class="border border-[#1e2d42] text-gray-200 font-mono text-[.68rem] tracking-widest uppercase px-7 py-3.5 hover:border-[#00d4ff] hover:text-[#00d4ff] transition-colors flex items-center gap-2">
+        Read Blog ↗
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="flex flex-wrap gap-10 fade-up d4">
+      <div>
+        <div class="font-display font-extrabold text-[clamp(2rem,5vw,3.8rem)] text-[#00d4ff] leading-none tracking-tight" id="c1">0</div>
+        <div class="font-mono text-[.6rem] tracking-[.2em] text-gray-500 uppercase mt-1">Projects Built</div>
+      </div>
+      <div class="border-l border-[#1e2d42] pl-10">
+        <div class="font-display font-extrabold text-[clamp(2rem,5vw,3.8rem)] text-[#00d4ff] leading-none tracking-tight" id="c2">0</div>
+        <div class="font-mono text-[.6rem] tracking-[.2em] text-gray-500 uppercase mt-1">Technologies</div>
+      </div>
+      <div class="border-l border-[#1e2d42] pl-10">
+        <div class="font-display font-extrabold text-[clamp(2rem,5vw,3.8rem)] text-[#00d4ff] leading-none tracking-tight" id="c3">0</div>
+        <div class="font-mono text-[.6rem] tracking-[.2em] text-gray-500 uppercase mt-1">Years Building</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orbit (desktop) -->
+  <div class="hero-orbit absolute right-[5%] top-1/2 -translate-y-1/2 w-[340px] h-[340px] hidden lg:block">
+    <div class="spin-cw  absolute inset-0 rounded-full border border-[#1e2d42]"></div>
+    <div class="spin-ccw absolute inset-[36px] rounded-full border border-[rgba(0,212,255,.14)]"></div>
+    <div class="spin-s   absolute inset-[76px] rounded-full border border-[rgba(255,107,53,.12)]"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[106px] h-[106px] rounded-full overflow-hidden border-2 border-[#00d4ff] shadow-[0_0_24px_rgba(0,212,255,.3)]">
+      <img src="https://aarav.com.np/src/images/aaravpp.png" alt="Aarav" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2.5rem\'>🤖</div>'">
+    </div>
+    <span class="absolute top-[5%]  left-1/2 -translate-x-1/2 font-mono text-[.58rem] text-[#00d4ff] bg-[#0d1520] border border-[#1e2d42] px-3 py-1 whitespace-nowrap">DJANGO</span>
+    <span class="absolute right-[-14px] top-1/2 -translate-y-1/2  font-mono text-[.58rem] text-[#00d4ff] bg-[#0d1520] border border-[#1e2d42] px-3 py-1 whitespace-nowrap">REACT</span>
+    <span class="absolute bottom-[5%] left-1/2 -translate-x-1/2 font-mono text-[.58rem] text-[#00d4ff] bg-[#0d1520] border border-[#1e2d42] px-3 py-1 whitespace-nowrap">IoT</span>
+    <span class="absolute left-[-14px]  top-1/2 -translate-y-1/2  font-mono text-[.58rem] text-[#00d4ff] bg-[#0d1520] border border-[#1e2d42] px-3 py-1 whitespace-nowrap">ARDUINO</span>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-6 md:left-10 flex items-center gap-3">
+    <div class="w-px h-10 bg-gradient-to-b from-[#00d4ff] to-transparent"></div>
+    <span class="font-mono text-[.56rem] tracking-[.22em] text-gray-600 uppercase">Scroll</span>
+  </div>
+</section>
+
+<div class="border-t border-[#1e2d42] mx-6 md:mx-10"></div>
+
+<!-- ABOUT -->
+<section id="about" class="py-28 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+
+    <div>
+      <div class="flex items-center gap-3 font-mono text-[.6rem] tracking-[.22em] uppercase text-[#00d4ff] mb-4 fade-up">
+        02 — About <span class="h-px w-12 bg-[#00d4ff] inline-block"></span>
+      </div>
+      <h2 class="font-display font-extrabold text-[clamp(2.5rem,6vw,5rem)] leading-[.92] tracking-tight mb-8 fade-up d1">
+        Engineer.<br>
+        <span style="color:transparent;-webkit-text-stroke:1px #1e2d42;">Builder.</span><br>
+        Maker.
+      </h2>
+      <p class="font-mono text-[.78rem] text-gray-300 leading-[1.9] mb-5 fade-up d2">
+        I'm Aarav — a developer from Nepal who builds things that work in the real world. My work spans autonomous robotics systems, IoT infrastructure, Django REST APIs, and React-powered interfaces.
+      </p>
+      <p class="font-mono text-[.78rem] text-gray-400 leading-[1.9] fade-up d3">
+        Whether it's an RFID attendance system or a real-time scoreboard, I obsess over the details — from the hardware it runs on to the humans who use it.
+      </p>
+    </div>
+
+    <!-- Terminal -->
+    <div class="fade-up d2">
+      <div class="bg-[#0d1520] border border-[#1e2d42] overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-[#1e2d42]">
+          <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#28ca41]"></span>
+          <span class="font-mono text-[.6rem] text-gray-500 ml-2">aarav@portfolio ~</span>
+        </div>
+        <div class="p-6 font-mono text-[.73rem] leading-[2]">
+          <div><span class="text-[#00d4ff]">$</span> <span class="text-gray-200">cat about.json</span></div>
+          <div class="text-gray-600">// Aarav Poudel's profile</div>
+          <div class="text-gray-300">{</div>
+          <div class="text-gray-300">&nbsp;&nbsp;<span class="text-[#00d4ff]">"name"</span>: <span class="text-[#ff6b35]">"Aarav Poudel"</span>,</div>
+          <div class="text-gray-300">&nbsp;&nbsp;<span class="text-[#00d4ff]">"location"</span>: <span class="text-[#ff6b35]">"Kathmandu, Nepal 🇳🇵"</span>,</div>
+          <div class="text-gray-300">&nbsp;&nbsp;<span class="text-[#00d4ff]">"stack"</span>: [</div>
+          <div class="text-gray-300">&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ff6b35]">"Robotics"</span>, <span class="text-[#ff6b35]">"IoT"</span>,</div>
+          <div class="text-gray-300">&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ff6b35]">"Django"</span>, <span class="text-[#ff6b35]">"React"</span></div>
+          <div class="text-gray-300">&nbsp;&nbsp;],</div>
+          <div class="text-gray-300">&nbsp;&nbsp;<span class="text-[#00d4ff]">"status"</span>: <span class="text-[#ff6b35]">"building cool stuff"</span>,</div>
+          <div class="text-gray-300">&nbsp;&nbsp;<span class="text-[#00d4ff]">"open_to"</span>: <span class="text-[#ff6b35]">"collaborations"</span></div>
+          <div class="text-gray-300">}</div>
+          <div class="text-gray-300 mt-1"><span class="text-[#00d4ff]">$</span> <span class="blink">▋</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="border-t border-[#1e2d42] mx-6 md:mx-10"></div>
+
+<!-- SKILLS -->
+<section id="skills" class="py-28 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center gap-3 font-mono text-[.6rem] tracking-[.22em] uppercase text-[#00d4ff] mb-4 fade-up">
+      03 — Expertise <span class="h-px w-12 bg-[#00d4ff] inline-block"></span>
+    </div>
+    <h2 class="font-display font-extrabold text-[clamp(2.5rem,6vw,5rem)] leading-[.95] tracking-tight mb-14 fade-up d1">
+      What I<br>Build With
+    </h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[#1e2d42] fade-up d2">
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">🤖</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">Robotics</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">Autonomous systems, sensor fusion, control algorithms, and embedded programming for real-world robot applications.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">Arduino</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">ROS</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">C++</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">🌐</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">IoT Systems</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">End-to-end connected device solutions — MQTT protocols, RFID, sensor networks, and smart automation.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">MQTT</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">ESP32</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">RFID</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">⚡</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">Django</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">Scalable REST APIs, Django REST Framework, auth, database optimization, and production backend architecture.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">DRF</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">PostgreSQL</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">Celery</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">⚛️</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">React</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">Dynamic, performant UIs — hooks, context, TypeScript, and component-driven architecture for modern frontends.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">React</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">TypeScript</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">Vite</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">🔌</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">Electronics</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">PCB design, circuit prototyping, hardware debugging — bridging digital code and physical electronics.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">KiCad</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">I²C / SPI</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="text-3xl mb-4 block">🐍</span>
+        <div class="font-display font-bold text-[1.1rem] text-gray-100 mb-2">Python</div>
+        <div class="font-mono text-[.72rem] text-gray-400 leading-[1.85] mb-4">From data processing to ML integration — Python powers automation, APIs, and system tooling across the stack.</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">NumPy</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">OpenCV</span>
+          <span class="font-mono text-[.58rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-[#00d4ff]">FastAPI</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="border-t border-[#1e2d42] mx-6 md:mx-10"></div>
+
+<!-- PROJECTS -->
+<section id="projects" class="py-28 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center gap-3 font-mono text-[.6rem] tracking-[.22em] uppercase text-[#00d4ff] mb-4 fade-up">
+      04 — Work <span class="h-px w-12 bg-[#00d4ff] inline-block"></span>
+    </div>
+    <h2 class="font-display font-extrabold text-[clamp(2.5rem,6vw,5rem)] leading-[.95] tracking-tight mb-14 fade-up d1">
+      Selected<br>Projects
+    </h2>
+
+    <div class="grid sm:grid-cols-2 gap-px bg-[#1e2d42]">
+
+      <div class="proj-card fade-up">
+        <div class="h-56 overflow-hidden bg-[#131e2e]">
+          <img src="https://aarav.com.np/src/images/gallery/f1racer.jpeg" alt="F1 Racer" class="w-full h-full object-cover"
+            onerror="this.outerHTML='<div class=\'h-56 bg-[#131e2e] flex items-center justify-center text-5xl\'>🏁</div>'">
+        </div>
+        <div class="p-7">
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] mb-2">PROJECT / 001</div>
+          <div class="font-display font-bold text-xl text-gray-100 mb-3">F1 Race Controller</div>
+          <div class="font-mono text-[.7rem] text-gray-400 leading-[1.85] mb-5">Custom-built RC race car with wireless telemetry — real-time speed, battery, and lap data streamed to a Django + React dashboard.</div>
+          <div class="flex flex-wrap gap-2">
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">Arduino</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">Django</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">WebSockets</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">React</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card fade-up d1">
+        <div class="h-56 overflow-hidden bg-[#131e2e]">
+          <img src="https://aarav.com.np/src/images/gallery/scoreboard_front.jpg" alt="Scoreboard" class="w-full h-full object-cover"
+            onerror="this.outerHTML='<div class=\'h-56 bg-[#131e2e] flex items-center justify-center text-5xl\'>📋</div>'">
+        </div>
+        <div class="p-7">
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] mb-2">PROJECT / 002</div>
+          <div class="font-display font-bold text-xl text-gray-100 mb-3">Live Scoreboard System</div>
+          <div class="font-mono text-[.7rem] text-gray-400 leading-[1.85] mb-5">Real-time competition scoreboard — scores update live via WebSockets with a Django backend and React frontend.</div>
+          <div class="flex flex-wrap gap-2">
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">Django</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">React</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">WebSockets</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">Redis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card fade-up d2">
+        <div class="h-56 overflow-hidden bg-[#131e2e]">
+          <img src="https://aarav.com.np/src/images/gallery/rfid_attendance.jpg" alt="RFID" class="w-full h-full object-cover"
+            onerror="this.outerHTML='<div class=\'h-56 bg-[#131e2e] flex items-center justify-center text-5xl\'>🪪</div>'">
+        </div>
+        <div class="p-7">
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] mb-2">PROJECT / 003</div>
+          <div class="font-display font-bold text-xl text-gray-100 mb-3">RFID Attendance System</div>
+          <div class="font-mono text-[.7rem] text-gray-400 leading-[1.85] mb-5">IoT attendance tracking with RFID card readers connected to a Django API — auto-generates reports and sends email alerts.</div>
+          <div class="flex flex-wrap gap-2">
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">IoT</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">RFID</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">Django</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">ESP32</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="proj-card fade-up d3">
+        <div class="h-56 overflow-hidden bg-[#131e2e]">
+          <img src="https://aarav.com.np/src/images/gallery/controller.jpg" alt="Controller" class="w-full h-full object-cover"
+            onerror="this.outerHTML='<div class=\'h-56 bg-[#131e2e] flex items-center justify-center text-5xl\'>🕹️</div>'">
+        </div>
+        <div class="p-7">
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] mb-2">PROJECT / 004</div>
+          <div class="font-display font-bold text-xl text-gray-100 mb-3">Custom Robot Controller</div>
+          <div class="font-mono text-[.7rem] text-gray-400 leading-[1.85] mb-5">Low-latency RF wireless controller for robotics competitions — ergonomic design with configurable mappings and 3D-printed housing.</div>
+          <div class="flex flex-wrap gap-2">
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[rgba(255,107,53,.35)] text-[#ff6b35]">Robotics</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">RF24</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">C++</span>
+            <span class="font-mono text-[.56rem] px-2 py-1 bg-[#131e2e] border border-[#1e2d42] text-gray-400">3D Print</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="border-t border-[#1e2d42] mx-6 md:mx-10"></div>
+
+<!-- GALLERY -->
+<section class="py-28 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex items-center gap-3 font-mono text-[.6rem] tracking-[.22em] uppercase text-[#00d4ff] mb-4 fade-up">
+      05 — Gallery <span class="h-px w-12 bg-[#00d4ff] inline-block"></span>
+    </div>
+    <h2 class="font-display font-extrabold text-[clamp(2rem,5vw,4rem)] leading-[.95] tracking-tight mb-12 fade-up d1">
+      From the<br>Build Bench
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 fade-up d2">
+      <div class="gallery-item aspect-square bg-[#0d1520]">
+        <img src="https://aarav.com.np/src/images/gallery/f1racer.jpeg" alt="F1 Racer" class="w-full h-full object-cover">
+      </div>
+      <div class="gallery-item aspect-square bg-[#0d1520]">
+        <img src="https://aarav.com.np/src/images/gallery/scoreboard_front.jpg" alt="Scoreboard" class="w-full h-full object-cover">
+      </div>
+      <div class="gallery-item aspect-square bg-[#0d1520]">
+        <img src="https://aarav.com.np/src/images/gallery/rfid_attendance.jpg" alt="RFID" class="w-full h-full object-cover">
+      </div>
+      <div class="gallery-item aspect-square bg-[#0d1520]">
+        <img src="https://aarav.com.np/src/images/gallery/controller.jpg" alt="Controller" class="w-full h-full object-cover">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="border-t border-[#1e2d42] mx-6 md:mx-10"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="py-28 px-6 md:px-10">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
+
+    <div>
+      <div class="flex items-center gap-3 font-mono text-[.6rem] tracking-[.22em] uppercase text-[#00d4ff] mb-4 fade-up">
+        06 — Contact <span class="h-px w-12 bg-[#00d4ff] inline-block"></span>
+      </div>
+      <h2 class="font-display font-extrabold text-[clamp(2.5rem,6vw,5rem)] leading-[.95] tracking-tight mb-8 fade-up d1">
+        Let's Build<br>Something.
+      </h2>
+      <p class="font-mono text-[.76rem] text-gray-400 leading-[1.9] max-w-sm fade-up d2">
+        Have a robotics project, a web app idea, or want to collaborate? I'm open to freelance work and interesting builds.
+      </p>
+    </div>
+
+
+<div class="fade-up d2">
+      <a href="mailto:poudelaarav@gmail.com" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">Email</div>
+          <div class="font-display font-semibold text-gray-100">poudelaarav@gmail.com</div>
+        </div>
+        <div class="c-arrow text-xl">→</div>
+      </a>
+      <a href="https://github.com/aaravcreator" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">GitHub</div>
+          <div class="font-display font-semibold text-gray-100">@aaravcreator</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+      <a href="https://linkedin.com/in/aaravpoudel" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">LinkedIn</div>
+          <div class="font-display font-semibold text-gray-100">in/aaravpoudel</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+      <a href="https://twitter.com/aarav_paudel" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">Twitter / X</div>
+          <div class="font-display font-semibold text-gray-100">@aarav_paudel</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+      <a href="https://instagram.com/aaravpaudel1" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">Instagram</div>
+          <div class="font-display font-semibold text-gray-100">@aaravpaudel1</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+      <a href="https://tiktok.com/@aaravpoudel256" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">TikTok</div>
+          <div class="font-display font-semibold text-gray-100">@aaravpoudel256</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+      <a href="https://blog.aarav.com.np" target="_blank" class="c-row">
+        <div>
+          <div class="font-mono text-[.58rem] tracking-widest text-[#00d4ff] uppercase mb-1">Blog</div>
+          <div class="font-display font-semibold text-gray-100">blog.aarav.com.np</div>
+        </div>
+        <div class="c-arrow text-xl">↗</div>
+      </a>
+    
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-[#1e2d42] px-6 md:px-10 py-7 flex flex-wrap justify-between items-center gap-4">
+  <span class="font-mono text-[.62rem] text-gray-600">© 2025 Aarav Poudel — Kathmandu, Nepal</span>
+  <span class="font-mono text-[.62rem] flex items-center gap-2">
+    <span class="w-1.5 h-1.5 rounded-full bg-[#39ff14] pulse-g inline-block"></span>
+    <span class="text-[#39ff14]">All systems operational</span>
+  </span>
+  <span class="font-mono text-[.62rem] text-gray-600">Built with ❤️ &amp; caffeine</span>
+</footer>
+
+<script>
+  // Cursor
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('cur-ring');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.width='18px'; cur.style.height='18px'; cur.style.background='#ff6b35'; ring.style.width='54px'; ring.style.height='54px'; });
+    el.addEventListener('mouseleave', () => { cur.style.width='10px'; cur.style.height='10px'; cur.style.background='#00d4ff'; ring.style.width='34px'; ring.style.height='34px'; });
+  });
+
+  // Scrolled nav
+  window.addEventListener('scroll', () =>
+    document.getElementById('navbar').classList.toggle('scrolled', scrollY > 40)
+  );
+
+  // Fade-up
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  // Hero fades on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('#home .fade-up').forEach(el => setTimeout(() => el.classList.add('visible'), 80));
+  });
+
+  // Counters
+  function animateCount(el, target) {
+    let start; const dur = 1600;
+    const step = ts => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      el.textContent = Math.floor(p * target) + (p < 1 ? '' : '+');
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target + '+';
+    };
+    requestAnimationFrame(step);
+  }
+  const sObs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      animateCount(document.getElementById('c1'), 20);
+      animateCount(document.getElementById('c2'), 15);
+      animateCount(document.getElementById('c3'), 3);
+      sObs.disconnect();
+    }
+  }, { threshold: 0.5 });
+  sObs.observe(document.getElementById('c1'));
+</script>
+</body>
+</html>
